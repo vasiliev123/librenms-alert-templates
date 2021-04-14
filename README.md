@@ -1,5 +1,5 @@
 # librenms-alert-templates
-Observium look-alike alert templates. Feel free to download and change as you wish :)
+Observium look-alike alert templates for LibreNMS. Feel free to download and change as you wish :)
 
 ## What to do?
 
