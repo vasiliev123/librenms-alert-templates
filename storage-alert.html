@@ -1,0 +1,181 @@
+<html>
+<head>
+  <title>{{ $alert->title }}</title>
+  <style type="text/css">
+
+  body {
+    margin: 15px;
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    color: #333333;
+    background-color: #fff;
+    font-weight: 400;
+  }
+
+  .box {
+    position: relative;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+    background: #ffffff;
+    margin-bottom: 10px;
+    width: 100%;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
+  }
+
+  .no-padding {
+    padding: 0 !important;
+  }
+
+  .table {
+    max-width: 600px;
+    background-color: #fff;
+    border-collapse: collapse;
+    border-spacing: 0;
+    color: #333;
+  }
+
+  .table th, .table td {
+    padding: 5px 10px;
+    line-height: 20px;
+    text-align: left;
+    vertical-align: top;
+    border-top: 1px solid #f4f4f4;
+  }
+
+  .table tbody > tr:nth-child(even) > td, .table tbody > tr:nth-child(even) > th {
+    background-color: #f9f9f9;
+  }
+
+  .table .state-marker, .state-marker {
+    padding: 0px;
+    margin: none;
+    width: 7px;
+  }
+
+  .table tbody > tr > td.state-marker {
+    background-color: #004774;
+  }
+
+  .table .ALERT .state-marker {
+    background-color: #bd1e1e;
+  }
+
+  .table tbody > tr.ALERT > td {
+    background-color: #ffebee;
+  }
+
+  .ALERT {
+    color: red;
+  }
+
+  .table .ACKNOWLEDGED .state-marker {
+    background-color: rgb(187, 135, 4);
+  }
+
+  .table tbody > tr.ACKNOWLEDGED > td {
+    background-color: #fff8eb;
+  }
+
+  .ACKNOWLEDGED {
+    color: goldenrod;
+  }
+
+  .table .RECOVERED .state-marker {
+    background-color: rgb(0, 92, 0);
+  }
+
+  .table tbody > tr.RECOVERED > td {
+    background-color: #ebffec;
+  }
+
+  .RECOVERED {
+    color: green;
+  }
+
+  .header { font-size: 20px; font-weight: bold; padding: 10px;}
+
+  </style>
+</head>
+<body>
+<table class="table box box-solid">
+  <tbody>
+    @if ($alert->state == 1) <tr class="ALERT">
+    @elseif ($alert->state == 2) <tr class="ACKNOWLEDGED">
+    @elseif ($alert->state == 0) <tr class="RECOVERED">
+    @elseif ($alert->state == 3) <tr class="RECOVERED">
+    @else <tr class="RECOVERED">
+    @endif
+        <td class="state-marker"></td>
+        <td colspan=2 style="padding: 10px; text-transform: uppercase;" class="header">
+          @if ($alert->state == 1) <span class="ALERT">{{ $alert->severity }} @endif
+            @if ($alert->state == 2) <span class="ACKNOWLEDGED">acknowledged @endif</span>
+            @if ($alert->state == 3) <span class="RECOVERED">recovering @endif</span>
+            @if ($alert->state == 0) <span class="RECOVERED">recovered @endif</span>
+        </td>
+    </tr>
+    <tr>
+        <td colspan=2><strong>Alert title</strong></td>
+        <td><strong>{{ $alert->title }}</strong></td>
+    </tr>
+    <tr>
+        <td colspan=2><strong>Affected partitions or mountpoints</strong></td>
+        <td>
+            <table>
+                <tr>
+                    <td><strong>Name</strong></td>
+                    <td><strong>Usage (%)</strong></td>
+                </tr>
+                @foreach ($alert->faults as $key => $value)
+                    <tr>
+                        <td>
+                            {{ $value['storage_descr'] }}
+                        </td>
+                        <td>
+                            {{ $value['storage_perc'] }}%
+                        </td>
+                    </tr>
+                @endforeach
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan=2><strong>Hostname (System name)</strong></td>
+        <td><strong><a href="https://your.librenms.url/device/{{ $alert->device_id }}/" class="entity-popup red" data-eid="{{ $alert->device_id }}" data-etype="device">{{ $alert->hostname }} ({{ $alert->sysName }})</a></strong></td>
+    </tr>
+    <tr>
+        <td colspan=2><strong>Device IP</strong></td>
+        <td><strong><a href="https://your.librenms.url/device/{{ $alert->device_id }}/" class="entity-popup red" data-eid="{{ $alert->device_id }}" data-etype="device">{{ $alert->ip }}</a></strong></td>
+    </tr>
+    <tr>
+        <td colspan=2><strong>Device Location</strong></td>
+        <td>{{ $alert->location }}</td>
+    </tr>
+    <tr>
+        <td colspan=2><strong>Alert Duration</strong></td>
+        <td>{{ $alert->elapsed }}</td>
+    </tr>
+    <tr>
+        <td colspan=3 style="padding: 10px; text-transform: uppercase; text-align: center; font-size: 16px;" class="header">Device details</td>
+    </tr>
+    <tr>
+        <td colspan=2><strong>Hardware</strong></td>
+        <td>{{ $alert->hardware }}</td>
+    </tr>
+    <tr>
+        <td colspan=2><strong>Operating System</strong></td>
+        <td>{{ $alert->os }}</td>
+    </tr>
+    <tr>
+        <td colspan=2><strong>System Version</strong></td>
+        <td>{{ $alert->version }}</td>
+    </tr>
+    <tr>
+        <td colspan=2><strong>Uptime</strong></td>
+        <td>{{ $alert->uptime_long }}</td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>
